@@ -7,11 +7,9 @@ def main():
     out_file = pd.read_csv("solution.csv")
     nearest_neighbour(in_file)
 
-def total_distance(path):
-    dist = (np.sqrt((path.x - path.x.shift())**2) +
-            np.sqrt((path.y - path.y.shift())**2)
-            ).sum()
-    
+def path_distance(graph: Graph, path: list[int]) -> float:
+    cities = [graph.cities[city_id] for city_id in path]
+    dist = sum(cities[i].distance_to(cities[i+1]) for i in range(len(cities)-1))
     return round(dist, 2)
 
 def nearest_neighbour(graph: Graph) -> tuple[list[int], list[int]]:
