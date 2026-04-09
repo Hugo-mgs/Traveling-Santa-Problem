@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from .core.graph import Graph, Edge, City
+from core.graph import Graph, Edge, City
 
 def main():
     in_file = pd.read_csv("input/random_50.csv")
