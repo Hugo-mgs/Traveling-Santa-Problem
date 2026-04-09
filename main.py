@@ -8,8 +8,7 @@ def main():
     nearest_neighbour(in_file)
 
 def path_distance(graph: Graph, path: list[int]) -> float:
-    cities = [graph.cities[city_id] for city_id in path]
-    dist = sum(cities[i].distance_to(cities[i+1]) for i in range(len(cities)-1))
+    dist = sum(graph.distance(path[i], path[i+1]) for i in range(len(path) - 1))
     return round(dist, 2)
 
 def nearest_neighbour(graph: Graph) -> tuple[list[int], list[int]]:
