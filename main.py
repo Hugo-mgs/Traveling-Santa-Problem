@@ -1,8 +1,9 @@
 import numpy as np
 import pandas as pd
+from .core.graph import Graph, Edge, City
 
 def main():
-    in_file = pd.read_csv("random_50.csv")
+    in_file = pd.read_csv("input/random_50.csv")
     out_file = pd.read_csv("solution.csv")
     nearest_neighbour(in_file)
 
