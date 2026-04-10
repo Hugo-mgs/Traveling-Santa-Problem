@@ -1,5 +1,6 @@
 from core.graph import Graph
 from algorithms.nearest_neighbour import nearest_neighbour
+from algorithms.two_opt import two_opt_solution
 
 import os
 
@@ -10,12 +11,19 @@ def main():
         print("File does not exist")
         return
     graph = Graph.from_csv(file_name)
+
+    # Precompute candidate lists for 2-opt (critical for performance on larger instances)
+    graph.compute_candidate_lists(k=20)  
     
     print("[1] Greedy")
+    print("[2] 2-opt")
     alg = input("Choose an algorithm: ")
     
     if alg == "1":
         sol = nearest_neighbour(graph)
+    elif alg == "2":
+        initial_sol = nearest_neighbour(graph)
+        sol = two_opt_solution(initial_sol, graph)
     else:
         print("Invalid algorithm")
         return
