@@ -21,14 +21,32 @@ def perturb_path(path: Path, k: int = 3) -> Path:
     return Path(cities)
 
 
-# --------------------------------------------------
-# Perturb full solution (both paths)
-# --------------------------------------------------
-def perturb_solution(solution: Solution, k: int = 3) -> Solution:
-    return Solution(
-        perturb_path(solution.path1, k),
-        perturb_path(solution.path2, k)
-    )
+# ==================================================
+# Constraint-aware perturbation (valid solutions)
+# ==================================================
+def perturb_solution_valid(
+    solution: Solution,
+    graph: Graph,
+    k: int = 3,
+    max_attempts: int = 10
+) -> Solution | None:
+    """
+    Try to generate a VALID perturbed solution.
+    Avoids wasting iterations on invalid edge overlaps.
+    """
+
+    for _ in range(max_attempts):
+        new_path1 = perturb_path(solution.path1, k)
+        new_path2 = perturb_path(solution.path2, k)
+
+        candidate = Solution(new_path1, new_path2)
+
+        # Only accept valid (edge-disjoint) solutions
+        if candidate.is_valid(graph):
+            return candidate
+
+    # failed to find valid perturbation
+    return None
 
 
 # --------------------------------------------------
@@ -50,10 +68,10 @@ def k_opt(
 
     for _ in range(iterations):
         # 1. Perturb (escape local minimum)
-        candidate = perturb_solution(best, k)
+        candidate = perturb_solution_valid(best, graph, k)
 
-        # 2. Ensure edge-disjoint constraint
-        if not candidate.is_valid(graph):
+        # 2. Skip if no valid perturbation found
+        if candidate is None:
             continue
 
         # 3. Local search (2-opt)
