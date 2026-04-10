@@ -1,4 +1,4 @@
-from .graph import Graph, Edge, make_edge
+from core.graph import Graph, Edge, make_edge
 
 #Construct two disjoint paths over all cities using a greedy nearest-neighbour heuristic.
 #Both paths start and end at city 0. At each step, both paths alternately extend to the

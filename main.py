@@ -1,5 +1,5 @@
 from core.graph import Graph
-from core.nearest_neighbour import nearest_neighbour
+from algorithms.nearest_neighbour import nearest_neighbour
 
 def main():
     graph = Graph.from_csv("input/random_50.csv")
