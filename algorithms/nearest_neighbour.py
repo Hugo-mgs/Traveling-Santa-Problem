@@ -1,9 +1,10 @@
 from core.graph import Graph, Edge, make_edge
+from core.solution import Path, Solution
 
 #Construct two disjoint paths over all cities using a greedy nearest-neighbour heuristic.
 #Both paths start and end at city 0. At each step, both paths alternately extend to the
 #nearest unvisited city, excluding edges already used by either path.
-def nearest_neighbour(graph: Graph) -> tuple[list[int], list[int]]:
+def nearest_neighbour(graph: Graph) -> Solution:
     used_edges: set[Edge] = set()
 
     path1 = [0]
@@ -29,4 +30,4 @@ def nearest_neighbour(graph: Graph) -> tuple[list[int], list[int]]:
     path1.append(0)
     path2.append(0)
 
-    return path1, path2
+    return Solution(Path(path1), Path(path2))
