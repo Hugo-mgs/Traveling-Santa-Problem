@@ -1,39 +1,20 @@
-import numpy as np
-import pandas as pd
-from core.graph import Graph, Edge, City
+from core.graph import Graph
+from core.nearest_neighbour import nearest_neighbour
 
 def main():
-    in_file = pd.read_csv("input/random_50.csv")
-    out_file = pd.read_csv("solution.csv")
-    nearest_neighbour(in_file)
+    graph = Graph.from_csv("input/random_50.csv")
+    path1, path2 = nearest_neighbour(graph)
+    print(score(graph, path1, path2))
 
-def total_distance(path):
-    dist = (np.sqrt((path.x - path.x.shift())**2) +
-            np.sqrt((path.y - path.y.shift())**2)
-            ).sum()
-    
+
+# Returns the total distance of a path using the graph's distance cache
+def path_distance(graph: Graph, path: list[int]) -> float:
+    dist = sum(graph.distance(path[i], path[i+1]) for i in range(len(path) - 1))
     return round(dist, 2)
 
-def nearest_neighbour(df):
-    # gets all the node ids ignoring the first
-    ids = df.index.values[1:]
-    # gets and pairs all x and y values ignoring the first
-    xy = np.array([df.x.values, df.y.values]).T[1:]
-    path = [0,]
-    for _ in range(len(df)-1):
-        # gets x and y from last id in path
-        last_x, last_y = df.x[path[-1]], df.y[path[-1]]
-        # calculates the distance between every node and the last one
-        dist = ((xy - np.array([last_x,last_y]))**2).sum(-1)
-        # gets the nearest one
-        nearest_idx = dist.argmin()
-        path.append(ids[nearest_idx])
-        # removes the found node from ids and xy
-        ids = np.delete(ids, nearest_idx, axis=0)
-        xy  = np.delete(xy,  nearest_idx, axis=0)
-    # adds the origin to the end
-    path.append(0)
-    return path
+# Returns the score of two paths, defined as the larger of the two distances
+def score(graph: Graph, path1: list[int], path2: list[int]) -> float:
+    return max(path_distance(graph, path1), path_distance(graph, path2))
 
 if __name__ == "__main__":
     main()
