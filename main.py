@@ -1,6 +1,7 @@
 from core.graph import Graph
 from algorithms.nearest_neighbour import nearest_neighbour
 from algorithms.two_opt import two_opt_solution
+from algorithms.k_opt import k_opt
 
 import os
 
@@ -17,6 +18,7 @@ def main():
     
     print("[1] Greedy")
     print("[2] 2-opt")
+    print("[3] K-opt (ILS)")
     alg = input("Choose an algorithm: ")
     
     if alg == "1":
@@ -24,6 +26,10 @@ def main():
     elif alg == "2":
         initial_sol = nearest_neighbour(graph)
         sol = two_opt_solution(initial_sol, graph)
+    elif alg == "3":
+        initial_sol = nearest_neighbour(graph)
+        sol = two_opt_solution(initial_sol, graph)
+        sol = k_opt(sol, graph, iterations=50, k=3)
     else:
         print("Invalid algorithm")
         return

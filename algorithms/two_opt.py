@@ -5,7 +5,7 @@ from core.graph import Graph
 # --------------------------------------------------
 # 2-opt for a single path (with pruning + candidates)
 # --------------------------------------------------
-def two_opt_path(path: Path, graph: Graph) -> Path:
+def two_opt_path(path: Path, graph: Graph, forbidden_edges: set) -> Path:
     best = path.cities[:]
 
     # position map (avoids O(n) index lookups)
@@ -27,6 +27,13 @@ def two_opt_path(path: Path, graph: Graph) -> Path:
                     continue
 
                 d = best[j + 1]
+
+                #  Check edge-disjoint constraint BEFORE computing distances
+                edge_ac = frozenset({a, c})
+                edge_bd = frozenset({b, d})
+
+                if edge_ac in forbidden_edges or edge_bd in forbidden_edges:
+                    continue
 
                 # pruning (cheap check)
                 if graph.distance(a, c) >= graph.distance(a, b):
@@ -61,19 +68,23 @@ def two_opt_solution(solution: Solution, graph: Graph) -> Solution:
     while improved:
         improved = False
 
+        # edges used by path2 → forbidden for path1
+        forbidden1 = best.path2.edge_set()
         # improve path1
-        new_path1 = two_opt_path(best.path1, graph)
-        candidate = Solution(new_path1, best.path2)
+        new_path1 = two_opt_path(best.path1, graph, forbidden1)
 
+        candidate = Solution(new_path1, best.path2)
         if candidate.is_valid(graph) and candidate.score(graph) < best.score(graph):
             best = candidate
             improved = True
             continue
 
+        # edges used by path1 → forbidden for path2
+        forbidden2 = best.path1.edge_set()
         # improve path2
-        new_path2 = two_opt_path(best.path2, graph)
+        new_path2 = two_opt_path(best.path2, graph, forbidden2)
+        
         candidate = Solution(best.path1, new_path2)
-
         if candidate.is_valid(graph) and candidate.score(graph) < best.score(graph):
             best = candidate
             improved = True
