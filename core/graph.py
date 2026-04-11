@@ -83,6 +83,16 @@ class Graph:
         candidates.sort(key=lambda c_id: self.distance(city_id, c_id))
         return candidates[:k] if k is not None else candidates
     
+    def compute_candidate_lists(self, k: int = 20):
+        """
+        Precompute k nearest neighbors for each city.
+        Critical for scaling 2-opt to large instances.
+        """
+        self.candidate_lists = {
+            city: self.nearest_neighbours(city, k=k)
+            for city in self.city_ids
+        }
+    
     # ------------------------------------------------------------------
         
     def __len__(self) -> int:
