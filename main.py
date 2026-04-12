@@ -16,8 +16,6 @@ def main():
         return
     graph = Graph.from_csv(file_name)
 
-    # Precompute candidate lists for 2-opt (critical for performance on larger instances)
-    graph.compute_candidate_lists(k=20)  
     
     print("[1] Greedy")
     print("[2] 2-opt")
@@ -26,6 +24,10 @@ def main():
     print("[5] Genetic Algorithm")
     print("[6] Hill Climbing")
     alg = input("Choose an algorithm: ")
+    
+    if not alg == "1":
+        # Precompute candidate lists for 2-opt (critical for performance on larger instances)
+        graph.compute_candidate_lists(k=20)  
     
     if alg == "1":
         sol = nearest_neighbour(graph)
