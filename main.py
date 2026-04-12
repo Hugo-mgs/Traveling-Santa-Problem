@@ -4,6 +4,7 @@ from algorithms.two_opt import two_opt_solution
 from algorithms.k_opt import k_opt
 from algorithms.simulated_annealing import simulated_annealing
 from algorithms.generic_algorithm import genetic_algorithm
+from algorithms.hill_climbing import hill_climbing
 
 import os
 
@@ -23,6 +24,7 @@ def main():
     print("[3] K-opt (ILS)")
     print("[4] Simulated Annealing")
     print("[5] Genetic Algorithm")
+    print("[6] Hill Climbing")
     alg = input("Choose an algorithm: ")
     
     if alg == "1":
@@ -40,6 +42,8 @@ def main():
         sol = simulated_annealing(sol, graph, iterations=1000, k=2)
     elif alg == "5":
         sol = genetic_algorithm(graph, population_size=50, max_no_improve=100)
+    elif alg == "6":
+        sol = hill_climbing(graph, n_restarts=50)
     else:
         print("Invalid algorithm")
         return
