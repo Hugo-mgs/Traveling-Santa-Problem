@@ -35,10 +35,6 @@ def two_opt_path(path: Path, graph: Graph, forbidden_edges: set) -> Path:
                 if edge_ac in forbidden_edges or edge_bd in forbidden_edges:
                     continue
 
-                # pruning (cheap check)
-                if graph.distance(a, c) >= graph.distance(a, b):
-                    continue
-
                 # full cost comparison
                 old_dist = graph.distance(a, b) + graph.distance(c, d)
                 new_dist = graph.distance(a, c) + graph.distance(b, d)
@@ -52,7 +48,9 @@ def two_opt_path(path: Path, graph: Graph, forbidden_edges: set) -> Path:
                         pos[best[idx]] = idx
 
                     improved = True
-
+                    break
+            if improved:
+                break
         # repeat until no improvement
 
     return Path(best)
@@ -72,21 +70,21 @@ def two_opt_solution(solution: Solution, graph: Graph) -> Solution:
         forbidden1 = best.path2.edge_set()
         # improve path1
         new_path1 = two_opt_path(best.path1, graph, forbidden1)
-
-        candidate = Solution(new_path1, best.path2)
-        if candidate.is_valid(graph) and candidate.score(graph) < best.score(graph):
-            best = candidate
-            improved = True
-            continue
-
+        if new_path1.total_distance(graph) < best.path1.total_distance(graph):
+            candidate = Solution(new_path1, best.path2)
+            if candidate.is_valid(graph):
+                best = candidate
+                improved = True
+                continue
+        
         # edges used by path1 → forbidden for path2
         forbidden2 = best.path1.edge_set()
         # improve path2
         new_path2 = two_opt_path(best.path2, graph, forbidden2)
-        
-        candidate = Solution(best.path1, new_path2)
-        if candidate.is_valid(graph) and candidate.score(graph) < best.score(graph):
-            best = candidate
-            improved = True
+        if new_path2.total_distance(graph) < best.path2.total_distance(graph):
+            candidate = Solution(best.path1, new_path2)
+            if candidate.is_valid(graph):
+                best = candidate
+                improved = True
 
     return best

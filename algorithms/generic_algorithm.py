@@ -15,7 +15,7 @@ def random_solution(graph: Graph) -> Solution:
 
 #Seed population with one nearest-neighbour solution, rest random.
 def initialise_population(graph: Graph, size: int) -> list[Solution]:
-    seed = nearest_neighbour(graph)
+    seed = two_opt_solution(nearest_neighbour(graph), graph)
     population = [seed]
     while len(population) < size:
         population.append(random_solution(graph))
@@ -41,7 +41,7 @@ def genetic_algorithm(graph: Graph, population_size: int = 50, max_no_improve: i
 
     no_improve = 0
     while no_improve < max_no_improve:
-        new_population = []
+        new_population = [best]
 
         for _ in range(population_size):
             # select two parents using tournament selection
