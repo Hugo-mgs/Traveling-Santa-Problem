@@ -3,7 +3,7 @@ from algorithms.nearest_neighbour import nearest_neighbour
 from algorithms.two_opt import two_opt_solution
 from algorithms.k_opt import k_opt
 from algorithms.simulated_annealing import simulated_annealing
-from algorithms.generic_algorithm import genetic_algorithm
+from algorithms.genetic_algorithm import genetic_algorithm
 from algorithms.hill_climbing import hill_climbing
 
 import os
