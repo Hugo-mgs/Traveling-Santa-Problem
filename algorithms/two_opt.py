@@ -35,10 +35,6 @@ def two_opt_path(path: Path, graph: Graph, forbidden_edges: set) -> Path:
                 if edge_ac in forbidden_edges or edge_bd in forbidden_edges:
                     continue
 
-                # pruning (cheap check)
-                #if graph.distance(a, c) >= graph.distance(a, b):
-                #continue
-
                 # full cost comparison
                 old_dist = graph.distance(a, b) + graph.distance(c, d)
                 new_dist = graph.distance(a, c) + graph.distance(b, d)
@@ -70,8 +66,9 @@ def two_opt_solution(solution: Solution, graph: Graph) -> Solution:
     while improved:
         improved = False
 
-        # improve path1
+        # edges used by path2 → forbidden for path1
         forbidden1 = best.path2.edge_set()
+        # improve path1
         new_path1 = two_opt_path(best.path1, graph, forbidden1)
         if new_path1.total_distance(graph) < best.path1.total_distance(graph):
             candidate = Solution(new_path1, best.path2)
@@ -79,9 +76,10 @@ def two_opt_solution(solution: Solution, graph: Graph) -> Solution:
                 best = candidate
                 improved = True
                 continue
-
-        # improve path2
+        
+        # edges used by path1 → forbidden for path2
         forbidden2 = best.path1.edge_set()
+        # improve path2
         new_path2 = two_opt_path(best.path2, graph, forbidden2)
         if new_path2.total_distance(graph) < best.path2.total_distance(graph):
             candidate = Solution(best.path1, new_path2)
