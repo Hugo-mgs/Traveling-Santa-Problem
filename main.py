@@ -35,17 +35,24 @@ def main():
         initial_sol = nearest_neighbour(graph)
         sol = two_opt_solution(initial_sol, graph)
     elif alg == "3":
+        it = int(input("Number of iterations: "))
+        k = int(input("K: "))
         initial_sol = nearest_neighbour(graph)
         sol = two_opt_solution(initial_sol, graph)
-        sol = k_opt(sol, graph, iterations=50, k=3)
+        sol = k_opt(sol, graph, iterations=it, k=k)
     elif alg == "4":
+        it = int(input("Number of iterations: "))
+        k = int(input("K: "))
         initial_sol = nearest_neighbour(graph)
         sol = two_opt_solution(initial_sol, graph)
-        sol = simulated_annealing(sol, graph, iterations=1000, k=2)
+        sol = simulated_annealing(sol, graph, iterations=it, k=k)
     elif alg == "5":
-        sol = genetic_algorithm(graph, population_size=50, max_no_improve=100)
+        pop_size = int(input("Population size: "))
+        no_imp = int(input("Max of no improves: "))
+        sol = genetic_algorithm(graph, population_size=pop_size, max_no_improve=no_imp)
     elif alg == "6":
-        sol = hill_climbing(graph, n_restarts=50)
+        n = int(input("Number of restarts: "))
+        sol = hill_climbing(graph, n_restarts=n)
     else:
         print("Invalid algorithm")
         return
@@ -53,6 +60,9 @@ def main():
     dist1, dist2 = sol.distances(graph)
     print(f"Path1 distance: {dist1}, Path2 distance: {dist2}")
     print(f"Score: {sol.score(graph)}")
+    output_filename = "solution.csv"
+    sol.to_csv(output_filename)
+    print(f"Solution saved to {output_filename}")
 
 if __name__ == "__main__":
     main()
