@@ -68,6 +68,16 @@ class Solution:
         return self.path1.total_distance(graph), self.path2.total_distance(graph)
     
     # ------------------------------------------------------------------
+    # Saving
+    # ------------------------------------------------------------------
+
+    def to_csv(self, filename: str):
+        """Save the solution to a CSV file."""
+        with open(filename, "w") as f:
+            f.write(",".join(map(str, self.path1.cities)) + "\n")
+            f.write(",".join(map(str, self.path2.cities)) + "\n")
+
+    # ------------------------------------------------------------------
 
     def __repr__(self) -> str:
         return f"Solution(path1_len={len(self.path1)}, path2_len={len(self.path2)})"
